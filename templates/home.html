@@ -13,6 +13,7 @@
     </a>
 
 {% for post in posts %}
+    {% set post_index = loop.index0 %}
   <div class="post" style="border: 1px solid #ccc; margin-bottom: 1rem; padding: 1rem;">
     <h2>{{ post.title }}</h2>
     <p>
@@ -23,13 +24,16 @@
     </p>
     <p>{{ post.content }}</p>
 
-    <!-- Buttons -->
-    <form method="POST" action="/delete/{{ loop.index0 }}" style="margin-top: 1rem;" onsubmit="return confirm('Are you sure you want to delete this post?');">
-      <button type="submit">Delete</button>
-    </form>
-    <form method="GET" action="/edit/{{ loop.index0 }}" style="display: inline;">
-      <button type="submit">Edit</button>
-    </form>
+      <!-- Only show buttons if user is author of post  -->
+      {% if post.author == current_author %}
+      <!-- Buttons -->
+      <form method="POST" action="/delete/{{ loop.index0 }}" style="margin-top: 1rem;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+        <button type="submit">Delete</button>
+      </form>
+      <form method="GET" action="/edit/{{ loop.index0 }}" style="display: inline;">
+        <button type="submit">Edit</button>
+      </form>
+    {% endif %}
 
     <!-- Replies -->
     <div class="replies" style="margin-left: 2rem; border-left: 2px solid #ccc; padding-left: 1rem; margin-top: 1rem;">
@@ -40,9 +44,15 @@
           </strong>
           — <em style="color: gray;">{{ reply.timestamp }}</em>
           <p>{{ reply.content }}</p>
-        </div>
-      {% endfor %}
-    </div>
+
+            {% if current_author == reply.author %}
+              <form method="POST" action="/delete_reply/{{ post_index }}/{{ loop.index0 }}" style="margin-top: 0.5rem;" onsubmit="return confirm('Delete this reply?');">
+                <button type="submit">Delete Reply</button>
+              </form>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
 
     <!-- Reply form -->
     <form method="POST" action="/reply/{{ loop.index0 }}" style="margin-top: 1rem;">

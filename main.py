@@ -25,8 +25,19 @@ def save_posts(posts):
 @app.route('/')
 def home():
     posts = load_posts()
+
+    current_author = request.cookies.get('author')
+    current_avatar = request.cookies.get('avatar')
+    current_color = request.cookies.get('color')
+    
     print("Loaded posts:", posts)
-    return render_template('home.html', posts=posts)
+    
+    return render_template('home.html',
+                           posts=posts,
+                           current_author=current_author,
+                           current_avatar=current_avatar,
+                           current_color=current_color
+                          )
 
 
 # Create post route
@@ -66,19 +77,41 @@ def create():
     return render_template('create.html', author=author, avatar=avatar, color=color)
 
 
-# Delete post route
+# Delete post route (fix condition)
 @app.route('/delete/<int:post_index>', methods=['POST'])
 def delete(post_index):
     posts = load_posts()
 
-    # Only delete if index is valid
+    # Delete only if index is valid
     if 0 <= post_index < len(posts):
-        deleted_post = posts.pop(post_index)  #Remove post at index
+        deleted_post = posts.pop(post_index)  # Remove post at index
         print("Deleted:", deleted_post)
-
         save_posts(posts)
 
     return redirect(url_for('home'))
+
+
+# Delete reply route (looks fine)
+@app.route('/delete_reply/<int:post_index>/<int:reply_index>', methods=['POST'])
+def delete_reply(post_index, reply_index):
+    posts = load_posts()
+
+    if 0 <= post_index < len(posts):
+        post = posts[post_index]
+        if 'replies' in post and 0 <= reply_index < len(post['replies']):
+            current_author = request.cookies.get('author', '')
+            reply_author = post['replies'][reply_index].get('author', '')
+
+            if current_author == reply_author:
+                deleted_reply = post['replies'].pop(reply_index)
+                print('Deleted reply:', deleted_reply)
+                save_posts(posts)
+            else:
+                print('Unauthorized delete reply attempt by', current_author)
+
+    return redirect(url_for('home'))
+
+
 
 
 @app.route('/edit/<int:post_index>', methods=['GET', 'POST'])
@@ -100,7 +133,6 @@ def edit(post_index):
     return render_template('edit.html', post=post, post_index=post_index)
 
 # Reply route
-
 @app.route('/reply/<int:post_index>', methods=['POST'])
 def reply(post_index):
     posts = load_posts()
@@ -131,7 +163,5 @@ def reply(post_index):
     return redirect(url_for('home'))
 
     
-
-
 if __name__ == '__main__':
     app.run(debug=True)

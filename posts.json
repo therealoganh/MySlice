@@ -1,40 +1,20 @@
 [
     {
-        "title": "Welcome to MySlice!",
-        "content": "Use this wall to write whatever you want",
-        "author": "Logan",
-        "timestamp": "Edited 06/05 03:40 PM",
-        "replies": [
-            {
-                "author": "a",
-                "avatar": "",
-                "color": "#b35656",
-                "content": "aa",
-                "timestamp": "06/05 06:52 PM"
-            },
-            {
-                "author": "Anonymous",
-                "avatar": "\ud83d\udc64",
-                "color": "#000000",
-                "content": "bb",
-                "timestamp": "06/05 07:02 PM"
-            }
-        ]
-    },
-    {
-        "title": "Pizza man",
-        "content": "a           ",
-        "author": "Logan",
-        "avatar": "\ud83c\udf55",
-        "timestamp": "6/5 04:09 PM"
-    },
-    {
         "title": "B",
         "content": "Text area why",
         "author": "A",
         "avatar": "",
         "color": "#c25b5b",
-        "timestamp": "6/5 04:38 PM"
+        "timestamp": "6/5 04:38 PM",
+        "replies": [
+            {
+                "author": "Logan",
+                "avatar": "",
+                "color": "#a3c2ff",
+                "content": "test",
+                "timestamp": "06/05 07:12 PM"
+            }
+        ]
     },
     {
         "title": "This is cookie test",
@@ -42,30 +22,21 @@
         "author": "Logan H",
         "avatar": "\ud83c\udf55",
         "color": "#ff5900",
-        "timestamp": "6/5 04:52 PM"
-    },
-    {
-        "title": "Test",
-        "content": "Cookie Test",
-        "author": "Logan",
-        "avatar": "\ud83c\udf55",
-        "color": "#a3c2ff",
-        "timestamp": "6/5 04:53 PM"
-    },
-    {
-        "title": "This is sweet",
-        "content": "reply to me",
-        "author": "Logan",
-        "avatar": "\ud83c\udf55",
-        "color": "#a3c2ff",
-        "timestamp": "6/5 07:00 PM",
+        "timestamp": "6/5 04:52 PM",
         "replies": [
             {
                 "author": "Logan",
-                "avatar": "\ud83d\udc64",
+                "avatar": "",
                 "color": "#a3c2ff",
-                "content": "I am logan 2",
-                "timestamp": "06/05 07:00 PM"
+                "content": "Test",
+                "timestamp": "06/05 07:11 PM"
+            },
+            {
+                "author": "Logan",
+                "avatar": "",
+                "color": "#a3c2ff",
+                "content": "re",
+                "timestamp": "06/05 07:12 PM"
             }
         ]
     }
