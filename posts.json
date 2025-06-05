@@ -3,7 +3,23 @@
         "title": "Welcome to MySlice!",
         "content": "Use this wall to write whatever you want",
         "author": "Logan",
-        "timestamp": "Edited 06/05 03:40 PM"
+        "timestamp": "Edited 06/05 03:40 PM",
+        "replies": [
+            {
+                "author": "a",
+                "avatar": "",
+                "color": "#b35656",
+                "content": "aa",
+                "timestamp": "06/05 06:52 PM"
+            },
+            {
+                "author": "Anonymous",
+                "avatar": "\ud83d\udc64",
+                "color": "#000000",
+                "content": "bb",
+                "timestamp": "06/05 07:02 PM"
+            }
+        ]
     },
     {
         "title": "Pizza man",
@@ -35,5 +51,22 @@
         "avatar": "\ud83c\udf55",
         "color": "#a3c2ff",
         "timestamp": "6/5 04:53 PM"
+    },
+    {
+        "title": "This is sweet",
+        "content": "reply to me",
+        "author": "Logan",
+        "avatar": "\ud83c\udf55",
+        "color": "#a3c2ff",
+        "timestamp": "6/5 07:00 PM",
+        "replies": [
+            {
+                "author": "Logan",
+                "avatar": "\ud83d\udc64",
+                "color": "#a3c2ff",
+                "content": "I am logan 2",
+                "timestamp": "06/05 07:00 PM"
+            }
+        ]
     }
 ]

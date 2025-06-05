@@ -85,7 +85,7 @@ def delete(post_index):
 def edit(post_index):
     posts = load_posts()
 
-    if post_index < 0 or post_index >= len(posts):
+    if 0 <= post_index < len(posts):
         return "Post not found", 404
 
     if request.method == 'POST':
@@ -98,6 +98,39 @@ def edit(post_index):
 
     post = posts[post_index]
     return render_template('edit.html', post=post, post_index=post_index)
+
+# Reply route
+
+@app.route('/reply/<int:post_index>', methods=['POST'])
+def reply(post_index):
+    posts = load_posts()
+
+    if 0 <= post_index < len(posts):
+        author = request.cookies.get('author', 'Anonymous')
+        avatar = request.cookies.get('avatar', '👤')
+        color = request.cookies.get('color', '#000000')
+        content = request.form['content']
+        timestamp = datetime.now().strftime('%m/%d %I:%M %p')
+
+        reply_data = {
+            'author': author,
+            'avatar': avatar,
+            'color': color,
+            'content': content,
+            'timestamp': timestamp
+        }
+
+        # Append reply to the post's replies list
+        if 'replies' not in posts[post_index]:
+            posts[post_index]['replies'] = []
+        posts[post_index]['replies'].append(reply_data)
+
+        save_posts(posts)
+
+    # Redirect back to home
+    return redirect(url_for('home'))
+
+    
 
 
 if __name__ == '__main__':
