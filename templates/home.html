@@ -1,65 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MySlice (of the internet) 🍕 </title>
+  <title>MySlice (of the internet) 🍕</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>MySlice (of the internet)🍕</h1>
-    <p>Recently, a friend told me about the <b>"Dead Internet Theory"</b>, which is the idea that the internet died some years ago and now mostly consists of bots interacting with other bots. This was a pretty depressing theory to me, so I've created MySlice (of the internet), where <em>humans</em> are meant to interact with other <em>humans</em>.</p>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-8">
+    <h1 class="text-3xl font-bold mb-4">MySlice 🍕</h1>
+    <p class="mb-6 text-sm text-gray-600">
+        Recently, a friend told me about the <b>"Dead Internet Theory"</b>, which is the idea that the internet died some years ago and now mostly consists of bots interacting with other bots. This was a pretty depressing theory to me, so I've created MySlice (of the internet), where <em>humans</em> are meant to interact with other <em>humans</em>.
+    </p>
+      <p class="mb-6 text-sm text-gray-600">Below you'll find a message board that I encourage you to interact with others on, and spark meaningful conversations. Let's all remind each other that the internet is <em>not</em> dead... yet.</p>
 
-    <!-- Create post button  -->
+    <!-- Create Post Button -->
     <a href="{{ url_for('create') }}">
-        <button style="margin-bottom: 1rem;">Create New Post</button>
+      <button class="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        Create New Post
+      </button>
     </a>
 
-{% for post in posts %}
-    {% set post_index = loop.index0 %}
-  <div class="post" style="border: 1px solid #ccc; margin-bottom: 1rem; padding: 1rem;">
-    <h2>{{ post.title }}</h2>
-    <p>
-      <strong style="color: {{ post.color or '#000' }}">
-        {{ post.avatar or "👤" }} {{ post.author }}
-      </strong>
-      — <em style="color: gray;">{{ post.timestamp }}</em>
-    </p>
-    <p>{{ post.content }}</p>
+    <!-- Posts Loop -->
+    {% for post in posts %}
+      {% set post_index = loop.index0 %}
+      <div class="border border-gray-300 rounded p-4 mb-6">
+        <h2 class="text-xl font-semibold">{{ post.title }}</h2>
+        <p class="text-sm text-gray-500">
+          <span style="color: {{ post.color or '#000' }}">{{ post.avatar }}</span>
+          <strong style="color: {{ post.color or '#000' }}">{{ post.author }}</strong> — {{ post.timestamp }}
+        </p>
+        <p class="mt-2">{{ post.content }}</p>
 
-      <!-- Only show buttons if user is author of post  -->
-      {% if post.author == current_author %}
-      <!-- Buttons -->
-      <form method="POST" action="/delete/{{ loop.index0 }}" style="margin-top: 1rem;" onsubmit="return confirm('Are you sure you want to delete this post?');">
-        <button type="submit">Delete</button>
-      </form>
-      <form method="GET" action="/edit/{{ loop.index0 }}" style="display: inline;">
-        <button type="submit">Edit</button>
-      </form>
-    {% endif %}
-
-    <!-- Replies -->
-    <div class="replies" style="margin-left: 2rem; border-left: 2px solid #ccc; padding-left: 1rem; margin-top: 1rem;">
-      {% for reply in post.replies or [] %}
-        <div class="reply" style="margin-bottom: 1rem;">
-          <strong style="color: {{ reply.color or '#000' }}">
-            {{ reply.avatar or "👤" }} {{ reply.author }}
-          </strong>
-          — <em style="color: gray;">{{ reply.timestamp }}</em>
-          <p>{{ reply.content }}</p>
-
-            {% if current_author == reply.author %}
-              <form method="POST" action="/delete_reply/{{ post_index }}/{{ loop.index0 }}" style="margin-top: 0.5rem;" onsubmit="return confirm('Delete this reply?');">
-                <button type="submit">Delete Reply</button>
-              </form>
-            {% endif %}
+        {% if post.author == current_author %}
+          <div class="mt-2">
+            <form method="POST" action="/delete/{{ post_index }}" class="inline-block" onsubmit="return confirm('Delete post?');">
+              <button class="text-red-600 hover:underline text-sm">Delete</button>
+            </form>
+            <a href="/edit/{{ post_index }}" class="ml-4 text-blue-600 hover:underline text-sm">Edit</a>
           </div>
-        {% endfor %}
-      </div>
+        {% endif %}
 
-    <!-- Reply form -->
-    <form method="POST" action="/reply/{{ loop.index0 }}" style="margin-top: 1rem;">
-      <textarea name="content" placeholder="Write a reply..." required></textarea>
-      <button type="submit">Reply</button>
-    </form>
+        <!-- Replies -->
+        <div class="mt-4 pl-4 border-l-2 border-gray-300">
+          {% for reply in post.replies or [] %}
+            <div class="mb-3">
+              <p class="text-sm">
+                <span style="color: {{ reply.color }}">{{ reply.avatar }}</span>
+                <strong style="color: {{ post.color or '#000' }}">{{ reply.author }}</strong>
+                <span class="text-gray-500">— {{ reply.timestamp }}</span>
+              </p>
+              <p class="ml-4">{{ reply.content }}</p>
+
+              {% if current_author == reply.author %}
+                <form method="POST" action="/delete_reply/{{ post_index }}/{{ loop.index0 }}" class="ml-4 mt-1 inline-block" onsubmit="return confirm('Delete reply?');">
+                  <button class="text-red-500 hover:underline text-xs">Delete Reply</button>
+                </form>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Reply Form -->
+        <form method="POST" action="/reply/{{ post_index }}" class="mt-4">
+          <textarea name="content" class="w-full border rounded p-2 text-sm" placeholder="Reply..." required></textarea>
+          <button class="mt-2 px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 text-sm">Reply</button>
+        </form>
+      </div>
+    {% endfor %}
   </div>
-{% endfor %}
 </body>
 </html>

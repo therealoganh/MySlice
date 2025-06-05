@@ -8,6 +8,7 @@ POSTS_FILE = 'posts.json'
 now = datetime.now()
 
 
+# Utility Functions
 def load_posts():
     try:
         with open(POSTS_FILE, 'r') as f:
@@ -21,7 +22,10 @@ def save_posts(posts):
         json.dump(posts, f, indent=4)
 
 
-# Home route
+# MAIN ROUTES
+
+
+# Default Home Route
 @app.route('/')
 def home():
     posts = load_posts()
@@ -29,15 +33,12 @@ def home():
     current_author = request.cookies.get('author')
     current_avatar = request.cookies.get('avatar')
     current_color = request.cookies.get('color')
-    
-    print("Loaded posts:", posts)
-    
+
     return render_template('home.html',
                            posts=posts,
                            current_author=current_author,
                            current_avatar=current_avatar,
-                           current_color=current_color
-                          )
+                           current_color=current_color)
 
 
 # Create post route
@@ -64,9 +65,9 @@ def create():
 
         # Create response and set cookies
         resp = make_response(redirect(url_for('home')))
-        resp.set_cookie('author', author, max_age=60*60*24*365)
-        resp.set_cookie('avatar', avatar, max_age=60*60*24*365)
-        resp.set_cookie('color', color, max_age=60*60*24*365)
+        resp.set_cookie('author', author, max_age=60 * 60 * 24 * 365)
+        resp.set_cookie('avatar', avatar, max_age=60 * 60 * 24 * 365)
+        resp.set_cookie('color', color, max_age=60 * 60 * 24 * 365)
 
         return resp
 
@@ -74,46 +75,13 @@ def create():
     avatar = request.cookies.get('avatar', '')
     color = request.cookies.get('color', '#000000')
 
-    return render_template('create.html', author=author, avatar=avatar, color=color)
+    return render_template('create.html',
+                           author=author,
+                           avatar=avatar,
+                           color=color)
 
 
-# Delete post route (fix condition)
-@app.route('/delete/<int:post_index>', methods=['POST'])
-def delete(post_index):
-    posts = load_posts()
-
-    # Delete only if index is valid
-    if 0 <= post_index < len(posts):
-        deleted_post = posts.pop(post_index)  # Remove post at index
-        print("Deleted:", deleted_post)
-        save_posts(posts)
-
-    return redirect(url_for('home'))
-
-
-# Delete reply route (looks fine)
-@app.route('/delete_reply/<int:post_index>/<int:reply_index>', methods=['POST'])
-def delete_reply(post_index, reply_index):
-    posts = load_posts()
-
-    if 0 <= post_index < len(posts):
-        post = posts[post_index]
-        if 'replies' in post and 0 <= reply_index < len(post['replies']):
-            current_author = request.cookies.get('author', '')
-            reply_author = post['replies'][reply_index].get('author', '')
-
-            if current_author == reply_author:
-                deleted_reply = post['replies'].pop(reply_index)
-                print('Deleted reply:', deleted_reply)
-                save_posts(posts)
-            else:
-                print('Unauthorized delete reply attempt by', current_author)
-
-    return redirect(url_for('home'))
-
-
-
-
+# Edit post route
 @app.route('/edit/<int:post_index>', methods=['GET', 'POST'])
 def edit(post_index):
     posts = load_posts()
@@ -132,7 +100,8 @@ def edit(post_index):
     post = posts[post_index]
     return render_template('edit.html', post=post, post_index=post_index)
 
-# Reply route
+
+# Reply to post route
 @app.route('/reply/<int:post_index>', methods=['POST'])
 def reply(post_index):
     posts = load_posts()
@@ -162,6 +131,44 @@ def reply(post_index):
     # Redirect back to home
     return redirect(url_for('home'))
 
-    
+
+# DELETE ROUTES
+# Delete post route
+@app.route('/delete/<int:post_index>', methods=['POST'])
+def delete(post_index):
+    posts = load_posts()
+    current_author = request.cookies.get('author', '')
+
+    # Delete only if index is valid
+    if 0 <= post_index < len(posts):
+        post = posts[post_index]
+        # Delete only if current author matches post author
+        if current_author == post.get('author'):
+            posts.pop(post_index)  # Remove post at index
+            save_posts(posts)
+
+    return redirect(url_for('home'))
+
+
+# Delete reply route
+@app.route('/delete_reply/<int:post_index>/<int:reply_index>',
+           methods=['POST'])
+def delete_reply(post_index, reply_index):
+    posts = load_posts()
+
+    if 0 <= post_index < len(posts):
+        post = posts[post_index]
+        if 'replies' in post and 0 <= reply_index < len(post['replies']):
+            current_author = request.cookies.get('author', '')
+            reply_author = post['replies'][reply_index].get('author', '')
+
+            # Only deletes reply if author matches
+            if current_author == reply_author:
+                post['replies'].pop(reply_index)
+                save_posts(posts)
+
+    return redirect(url_for('home'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)

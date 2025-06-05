@@ -1,43 +1,11 @@
 [
     {
-        "title": "B",
-        "content": "Text area why",
-        "author": "A",
-        "avatar": "",
-        "color": "#c25b5b",
-        "timestamp": "6/5 04:38 PM",
-        "replies": [
-            {
-                "author": "Logan",
-                "avatar": "",
-                "color": "#a3c2ff",
-                "content": "test",
-                "timestamp": "06/05 07:12 PM"
-            }
-        ]
-    },
-    {
-        "title": "This is cookie test",
-        "content": "here we go",
-        "author": "Logan H",
-        "avatar": "\ud83c\udf55",
-        "color": "#ff5900",
-        "timestamp": "6/5 04:52 PM",
-        "replies": [
-            {
-                "author": "Logan",
-                "avatar": "",
-                "color": "#a3c2ff",
-                "content": "Test",
-                "timestamp": "06/05 07:11 PM"
-            },
-            {
-                "author": "Logan",
-                "avatar": "",
-                "color": "#a3c2ff",
-                "content": "re",
-                "timestamp": "06/05 07:12 PM"
-            }
-        ]
+        "title": "Welcome to MySlice!",
+        "content": "Made for humans, not bots.",
+        "author": "Logan",
+        "avatar": "\ud83c\udf10",
+        "color": "#0084ff",
+        "timestamp": "6/5 08:15 PM",
+        "replies": []
     }
 ]

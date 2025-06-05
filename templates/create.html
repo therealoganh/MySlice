@@ -1,29 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Leave a Message</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Leave a Message</title>
 </head>
-<body>
-    <h1>Leave a Message</h1>
-    
-    <form method="POST" action="/create">
-        <label>Your Name:</label><br>
-        <input type="text" name="author" value="{{ author }}" placeholder="Your name" required><br><br>
-    
-        <label>Message Title:</label><br>
-        <input type="text" name="title" required><br><br>
-    
-        <label>Message:</label><br>
-        <textarea name="content" rows="5" cols="40" required>           </textarea><br><br>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="max-w-xl mx-auto mt-12 bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Leave a Message</h1>
 
-        <label>Pick an Emoji:</label><br>
-        <input title="Paste or type an emoji" type="text" name="avatar" value="{{ avatar }}" maxlength="2" placeholder="😀" /><br><br>
+    <form method="POST" action="/create" class="space-y-4">
+      <!-- Name -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Your Name:</label>
+        <input type="text" name="author" value="{{ author }}" placeholder="Your name"
+               required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+      </div>
 
-        <label>Name Color:</label>
-        <input type="color" name="color" value="{{ color }}"><br><br>
-    
-        <button type="submit">Post</button>
+      <!-- Title -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Message Title:</label>
+        <input type="text" name="title" placeholder="Title"
+               required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+      </div>
 
-    <p><a href="/">Back to Home</a></p>
+      <!-- Message Content -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Message:</label>
+        <textarea name="content" rows="5" placeholder="Write your message..."
+                  required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+      </div>
+
+      <!-- Emoji -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Pick an Emoji:</label>
+        <input type="text" name="avatar" value="{{ avatar }}" maxlength="2" placeholder="😀"
+               title="Paste or type an emoji"
+               class="w-16 border border-gray-300 rounded px-2 py-1 text-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-400">
+      </div>
+
+      <!-- Color Picker -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Name Color:</label>
+        <input type="color" name="color" value="{{ color }}"
+               class="w-16 h-10 p-1 border border-gray-300 rounded">
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-4">
+        <button type="submit"
+                class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+          Post Message
+        </button>
+      </div>
+    </form>
+
+    <p class="mt-4 text-center text-sm">
+      <a href="/" class="text-blue-600 hover:underline">← Back to Home</a>
+    </p>
+  </div>
 </body>
 </html>
