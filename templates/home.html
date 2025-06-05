@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MySlice (of the internet) 🍕 </title>
+</head>
+<body>
+    <h1>MySlice (of the internet)🍕</h1>
+    <p>Recently, a friend told me about the <b>"Dead Internet Theory"</b>, which is the idea that the internet died some years ago and now mostly consists of bots interacting with other bots. This was a pretty depressing theory to me, so I've created MySlice (of the internet), where <em>humans</em> are meant to interact with other <em>humans</em>.</p>
+
+
+    <!-- Create post button  -->
+    <a href="{{ url_for('create') }}">
+        <button style="margin-bottom: 1rem;">Create New Post</button>
+    </a>
+
+    <!-- Iterate posts.json and print post on page -->
+    {% for post in posts %}
+        <div style="border: 1px solid #ccc; margin-bottom: 1rem; padding: 1rem;">
+            <h2>{{ post.title }}</h2>
+            <p>
+              <strong style="color: {{ post.color or '#000' }}">
+                {{ post.avatar or "👤" }} {{ post.author }}
+              </strong>
+              — <em style="color: gray;">
+                {{ post.timestamp }}</em>
+            </p>
+            
+            <p>{{ post.content }}</p>
+
+            
+            <!-- Buttons -->
+            <form method="POST" action="/delete/{{             loop.index0 }}" style="margin-top: 1rem;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                <button type="submit">Delete</button>
+            </form>
+
+            <form method="GET" action="/edit/{{ loop.index0 }}" style="display: inline;">
+                <button type="submit">Edit</button>
+            </form>
+        </div>
+    {% endfor %}
+    
+</body>
+</html>

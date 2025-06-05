@@ -1,11 +1,104 @@
-from flask import Flask
+from datetime import datetime
+import json
+from flask import Flask, make_response, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
+POSTS_FILE = 'posts.json'
+now = datetime.now()
 
+
+def load_posts():
+    try:
+        with open(POSTS_FILE, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
+
+
+def save_posts(posts):
+    with open(POSTS_FILE, 'w') as f:
+        json.dump(posts, f, indent=4)
+
+
+# Home route
 @app.route('/')
-def index():
-    return 'Hello from Flask!'
+def home():
+    posts = load_posts()
+    print("Loaded posts:", posts)
+    return render_template('home.html', posts=posts)
+
+
+# Create post route
+@app.route('/create', methods=['GET', 'POST'])
+def create():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        author = request.form['author']
+        avatar = request.form['avatar']
+        color = request.form['color']
+        timestamp = f"{now.month}/{now.day} {now.strftime('%I:%M %p')}"
+
+        posts = load_posts()
+        posts.append({
+            'title': title,
+            'content': content.strip(),
+            'author': author,
+            'avatar': avatar,
+            'color': color,
+            'timestamp': timestamp
+        })
+        save_posts(posts)
+
+        # Create response and set cookies
+        resp = make_response(redirect(url_for('home')))
+        resp.set_cookie('author', author, max_age=60*60*24*365)
+        resp.set_cookie('avatar', avatar, max_age=60*60*24*365)
+        resp.set_cookie('color', color, max_age=60*60*24*365)
+
+        return resp
+
+    author = request.cookies.get('author', '')
+    avatar = request.cookies.get('avatar', '')
+    color = request.cookies.get('color', '#000000')
+
+    return render_template('create.html', author=author, avatar=avatar, color=color)
+
+
+# Delete post route
+@app.route('/delete/<int:post_index>', methods=['POST'])
+def delete(post_index):
+    posts = load_posts()
+
+    # Only delete if index is valid
+    if 0 <= post_index < len(posts):
+        deleted_post = posts.pop(post_index)  #Remove post at index
+        print("Deleted:", deleted_post)
+
+        save_posts(posts)
+
+    return redirect(url_for('home'))
+
+
+@app.route('/edit/<int:post_index>', methods=['GET', 'POST'])
+def edit(post_index):
+    posts = load_posts()
+
+    if post_index < 0 or post_index >= len(posts):
+        return "Post not found", 404
+
+    if request.method == 'POST':
+        posts[post_index]['title'] = request.form['title']
+        posts[post_index]['content'] = request.form['content']
+        posts[post_index]['timestamp'] = (
+            f"Edited {datetime.now().strftime('%m/%d %I:%M %p')}")
+        save_posts(posts)
+        return redirect(url_for('home'))
+
+    post = posts[post_index]
+    return render_template('edit.html', post=post, post_index=post_index)
+
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)

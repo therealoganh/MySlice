@@ -1,0 +1,39 @@
+[
+    {
+        "title": "Welcome to MySlice!",
+        "content": "Use this wall to write whatever you want",
+        "author": "Logan",
+        "timestamp": "Edited 06/05 03:40 PM"
+    },
+    {
+        "title": "Pizza man",
+        "content": "a           ",
+        "author": "Logan",
+        "avatar": "\ud83c\udf55",
+        "timestamp": "6/5 04:09 PM"
+    },
+    {
+        "title": "B",
+        "content": "Text area why",
+        "author": "A",
+        "avatar": "",
+        "color": "#c25b5b",
+        "timestamp": "6/5 04:38 PM"
+    },
+    {
+        "title": "This is cookie test",
+        "content": "here we go",
+        "author": "Logan H",
+        "avatar": "\ud83c\udf55",
+        "color": "#ff5900",
+        "timestamp": "6/5 04:52 PM"
+    },
+    {
+        "title": "Test",
+        "content": "Cookie Test",
+        "author": "Logan",
+        "avatar": "\ud83c\udf55",
+        "color": "#a3c2ff",
+        "timestamp": "6/5 04:53 PM"
+    }
+]
