@@ -1,6 +1,7 @@
 from datetime import datetime, date
 import json
 from flask import Flask, make_response, render_template, request, redirect, url_for
+import pytz
 
 app = Flask(__name__)
 
@@ -69,6 +70,9 @@ def save_posts(posts):
     with open(POSTS_FILE, 'w') as f:
         json.dump(posts, f, indent=4)
 
+def get_current_time():
+    central = pytz.timezone('America/Chicago')
+    return datetime.now(central)
 
 # MAIN ROUTES
 
