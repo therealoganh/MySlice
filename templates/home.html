@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>MySlice (of the internet) 🍕</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
@@ -97,6 +98,21 @@
         </form>
       </div>
     {% endfor %}
+          <p class="text-center mt-6">
+            <a href="{{ url_for('vote') }}" class="text-indigo-600 hover:underline text-sm">
+              ✨ Vote on new features
+            </a>
+          </p>
+
+          <p class="mt-10 text-center text-xs text-gray-500">
+            Still hungry? Maybe there's another <em>slice</em> out there... <a href="/slice">🍕</a>
+          </p>
+
+
   </div>
+        <script>
+          console.log("psst... the slice is secret. /slice 🍕");
+        </script>
+
 </body>
 </html>

@@ -21,7 +21,40 @@ def get_daily_prompt():
     
 now = datetime.now()
 
+# Poll Functionality
+POLL_FILE = 'poll.json'
 
+def load_poll():
+    try:
+        with open(POLL_FILE, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+def save_poll(poll):
+    with open(POLL_FILE, 'w') as f:
+        json.dump(poll, f, indent=4)
+
+@app.route('/vote', methods=['GET', 'POST'])
+def vote():
+    poll = load_poll()
+    has_voted = request.cookies.get('voted')
+
+    if request.method == 'POST' and not has_voted:
+        choice = request.form.get('feature')
+        if choice in poll:
+            poll[choice] += 1
+            save_poll(poll)
+            resp = make_response(redirect(url_for('vote')))
+            resp.set_cookie('voted', 'yes', max_age=60*60*24*365)
+            return resp
+
+    return render_template('vote.html', poll=poll,has_voted=has_voted)
+
+# Easter egg functionality
+@app.route('/slice')
+def slice_secret():
+    return render_template('slice.html')
 
 # Utility Functions
 def load_posts():
