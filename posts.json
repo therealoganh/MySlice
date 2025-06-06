@@ -6,6 +6,14 @@
         "avatar": "\ud83c\udf10",
         "color": "#0084ff",
         "timestamp": "6/5 08:15 PM",
-        "replies": []
+        "replies": [
+            {
+                "author": "Anonymous",
+                "avatar": "\ud83d\udc64",
+                "color": "#000000",
+                "content": "Sup",
+                "timestamp": "06/05 09:23 PM"
+            }
+        ]
     }
 ]

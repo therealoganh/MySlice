@@ -7,10 +7,10 @@
   <title>Leave a Message</title>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans">
-  <div class="max-w-xl mx-auto mt-12 bg-white p-6 rounded-lg shadow-md">
+  <div class="max-w-xl w-full mx-auto mt-10 px-4 sm:px-6 py-6 bg-white rounded-lg shadow-md">
     <h1 class="text-2xl font-bold mb-6 text-center">Leave a Message</h1>
 
-    <form method="POST" action="/create" class="space-y-4">
+    <form method="POST" action="/create" class="space-y-5">
       <!-- Name -->
       <div>
         <label class="block text-sm font-medium mb-1">Your Name:</label>
@@ -29,7 +29,7 @@
       <div>
         <label class="block text-sm font-medium mb-1">Message:</label>
         <textarea name="content" rows="5" placeholder="Write your message..."
-                  required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                  required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"></textarea>
       </div>
 
       <!-- Emoji -->
@@ -44,7 +44,7 @@
       <div>
         <label class="block text-sm font-medium mb-1">Name Color:</label>
         <input type="color" name="color" value="{{ color }}"
-               class="w-16 h-10 p-1 border border-gray-300 rounded">
+               class="w-16 h-10 border border-gray-300 rounded">
       </div>
 
       <!-- Submit -->
@@ -56,7 +56,7 @@
       </div>
     </form>
 
-    <p class="mt-4 text-center text-sm">
+    <p class="mt-6 text-center text-sm">
       <a href="/" class="text-blue-600 hover:underline">← Back to Home</a>
     </p>
   </div>

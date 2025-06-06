@@ -1,11 +1,26 @@
-from datetime import datetime
+from datetime import datetime, date
 import json
 from flask import Flask, make_response, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
 POSTS_FILE = 'posts.json'
+
+# Daily prompt feature
+DAILY_PROMPTS = [
+    "What's something small that made you smile today?",
+    "If you had a personal robot assistant, what would you name it?",
+    "What's your favorite smell in the world?",
+    "What’s one conspiracy theory you secretly kind of believe?",
+    "Describe your dream home in 5 words."
+]
+
+def get_daily_prompt():
+    day_index = date.today().toordinal() % len(DAILY_PROMPTS)
+    return DAILY_PROMPTS[day_index]
+    
 now = datetime.now()
+
 
 
 # Utility Functions
@@ -38,7 +53,8 @@ def home():
                            posts=posts,
                            current_author=current_author,
                            current_avatar=current_avatar,
-                           current_color=current_color)
+                           current_color=current_color,
+                          daily_prompt=get_daily_prompt())
 
 
 # Create post route
@@ -86,7 +102,7 @@ def create():
 def edit(post_index):
     posts = load_posts()
 
-    if 0 <= post_index < len(posts):
+    if not (0 <= post_index < len(posts)):
         return "Post not found", 404
 
     if request.method == 'POST':
