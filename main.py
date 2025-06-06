@@ -20,7 +20,6 @@ def get_daily_prompt():
     day_index = date.today().toordinal() % len(DAILY_PROMPTS)
     return DAILY_PROMPTS[day_index]
     
-now = datetime.now()
 
 # Poll Functionality
 POLL_FILE = 'poll.json'
@@ -70,10 +69,6 @@ def save_posts(posts):
     with open(POSTS_FILE, 'w') as f:
         json.dump(posts, f, indent=4)
 
-def get_current_time():
-    central = pytz.timezone('America/Chicago')
-    return datetime.now(central)
-
 # MAIN ROUTES
 
 
@@ -103,7 +98,8 @@ def create():
         author = request.form['author']
         avatar = request.form['avatar']
         color = request.form['color']
-        timestamp = f"{now.month}/{now.day} {now.strftime('%I:%M %p')}"
+        central = pytz.timezone('America/Chicago')
+        timestamp = datetime.now(central).strftime('%m/%d %I:%M %p')
 
         posts = load_posts()
         posts.append({
@@ -138,6 +134,7 @@ def create():
 @app.route('/edit/<int:post_index>', methods=['GET', 'POST'])
 def edit(post_index):
     posts = load_posts()
+    central = pytz.timezone('America/Chicago')
 
     if not (0 <= post_index < len(posts)):
         return "Post not found", 404
@@ -146,7 +143,7 @@ def edit(post_index):
         posts[post_index]['title'] = request.form['title']
         posts[post_index]['content'] = request.form['content']
         posts[post_index]['timestamp'] = (
-            f"Edited {datetime.now().strftime('%m/%d %I:%M %p')}")
+            f"Edited {datetime.now(central).strftime('%m/%d %I:%M %p')}")
         save_posts(posts)
         return redirect(url_for('home'))
 
@@ -158,13 +155,14 @@ def edit(post_index):
 @app.route('/reply/<int:post_index>', methods=['POST'])
 def reply(post_index):
     posts = load_posts()
+    central = pytz.timezone('America/Chicago')
 
     if 0 <= post_index < len(posts):
         author = request.cookies.get('author', 'Anonymous')
         avatar = request.cookies.get('avatar', '👤')
         color = request.cookies.get('color', '#000000')
         content = request.form['content']
-        timestamp = datetime.now().strftime('%m/%d %I:%M %p')
+        timestamp = datetime.now(central).strftime('%m/%d %I:%M %p')
 
         reply_data = {
             'author': author,
