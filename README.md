@@ -3,13 +3,6 @@
 A lightweight, cookie-powered message wall made for **humans**, not bots.  
 Inspired by the "Dead Internet Theory" — this is a digital space where real people can connect, post, and reply without the noise of social media.
 
-## 👋 Built for Humans
-MySlice is about small, honest moments on the web. No followers, no trending, no noise.
-
-If you’re reading this — you’re probably not a bot.
-
-Welcome to your slice of the internet. 🍕
-
 ---
 
 ## 🧠 Why I Built This
