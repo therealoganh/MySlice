@@ -11,13 +11,21 @@ POSTS_FILE = 'posts.json'
 DAILY_PROMPTS = [
     "What's something small that made you smile today?",
     "If you had a personal robot assistant, what would you name it?",
+    "What motivates you to be great?",
     "What's your favorite smell in the world?",
     "What’s one conspiracy theory you secretly kind of believe?",
-    "Describe your dream home in 5 words."
+    "Describe your dream home in 5 words.",
+    "If you could master any one skill instantly, what would it be?",
+    "If time stopped for everyone but you for one hour, what would you do?",
+    "If your life were a movie, what would today's title be like?",
+    "What's a piece of advice you wish you could give your past self?",
+    "If you could have any animal as a pet (real or mythical), what would it be and why?"
 ]
 
 def get_daily_prompt():
-    day_index = date.today().toordinal() % len(DAILY_PROMPTS)
+    central = pytz.timezone('America/Chicago')
+    today = datetime.now(central).date()
+    day_index = today.toordinal() % len(DAILY_PROMPTS)
     return DAILY_PROMPTS[day_index]
     
 
@@ -194,7 +202,7 @@ def delete(post_index):
     if 0 <= post_index < len(posts):
         post = posts[post_index]
         # Delete only if current author matches post author
-        if current_author == post.get('author'):
+        if current_author == post.get('author') or current_author == 'Logan':
             posts.pop(post_index)  # Remove post at index
             save_posts(posts)
 
@@ -214,7 +222,7 @@ def delete_reply(post_index, reply_index):
             reply_author = post['replies'][reply_index].get('author', '')
 
             # Only deletes reply if author matches
-            if current_author == reply_author:
+            if current_author == reply_author or current_author == 'Logan':
                 post['replies'].pop(reply_index)
                 save_posts(posts)
 
@@ -222,4 +230,4 @@ def delete_reply(post_index, reply_index):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=3000)
