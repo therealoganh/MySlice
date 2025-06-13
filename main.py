@@ -2,6 +2,7 @@ from datetime import datetime, date
 import json
 from flask import Flask, make_response, render_template, request, redirect, url_for
 import pytz
+from replit import db
 
 app = Flask(__name__)
 
@@ -9,18 +10,18 @@ POSTS_FILE = 'posts.json'
 
 # Daily prompt feature
 DAILY_PROMPTS = [
-    "What's something small that made you smile today?",
-    "If you had a personal robot assistant, what would you name it?",
-    "What motivates you to be great?",
-    "What's your favorite smell in the world?",
-    "What’s one conspiracy theory you secretly kind of believe?",
-    "Describe your dream home in 5 words.",
-    "If you could master any one skill instantly, what would it be?",
-    "If time stopped for everyone but you for one hour, what would you do?",
-    "If your life were a movie, what would today's title be like?",
-    "What's a piece of advice you wish you could give your past self?",
-    "If you could have any animal as a pet (real or mythical), what would it be and why?"
+    "How do you think the latest advances in AI will change your day-to-day life?",
+    "What’s your take on the recent climate initiatives—hopeful or skeptical?",
+    "If you could ask a world leader one question about global peace, what would it be?",
+    "What’s one technology you’re excited or concerned about becoming mainstream soon?",
+    "How have recent social movements inspired or challenged your personal beliefs?",
+    "What’s something you learned this week that surprised you?",
+    "If you had to create a headline for your life today, what would it say?",
+    "How do you stay hopeful when news seems overwhelming?",
+    "What’s a change you want to see in your community this year?",
+    "If you could share one piece of advice about adapting to change, what would it be?"
 ]
+
 
 def get_daily_prompt():
     central = pytz.timezone('America/Chicago')
@@ -32,16 +33,18 @@ def get_daily_prompt():
 # Poll Functionality
 POLL_FILE = 'poll.json'
 
+DEFAULT_POLL = {
+    "Dark Mode": 0,
+    "Emojis": 0,
+    "Themes": 0,
+    "More Prompts": 0
+}
+
 def load_poll():
-    try:
-        with open(POLL_FILE, 'r') as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {}
+    return db.get("poll", DEFAULT_POLL.copy())
 
 def save_poll(poll):
-    with open(POLL_FILE, 'w') as f:
-        json.dump(poll, f, indent=4)
+    db['poll'] = poll
 
 @app.route('/vote', methods=['GET', 'POST'])
 def vote():
@@ -66,16 +69,11 @@ def slice_secret():
 
 # Utility Functions
 def load_posts():
-    try:
-        with open(POSTS_FILE, 'r') as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
+    return db.get("posts", [])
 
 
 def save_posts(posts):
-    with open(POSTS_FILE, 'w') as f:
-        json.dump(posts, f, indent=4)
+    db['posts'] = posts
 
 # MAIN ROUTES
 
@@ -197,12 +195,14 @@ def reply(post_index):
 def delete(post_index):
     posts = load_posts()
     current_author = request.cookies.get('author', '')
+    logan_key = request.cookies.get('logan_key')
+    is_logan = current_author == 'Logan' and logan_key == 'supersecretvalue'
 
     # Delete only if index is valid
     if 0 <= post_index < len(posts):
         post = posts[post_index]
         # Delete only if current author matches post author
-        if current_author == post.get('author') or current_author == 'Logan':
+        if current_author == post.get('author') or is_logan:
             posts.pop(post_index)  # Remove post at index
             save_posts(posts)
 
@@ -212,21 +212,32 @@ def delete(post_index):
 # Delete reply route
 @app.route('/delete_reply/<int:post_index>/<int:reply_index>',
            methods=['POST'])
+
 def delete_reply(post_index, reply_index):
     posts = load_posts()
+    
 
     if 0 <= post_index < len(posts):
         post = posts[post_index]
         if 'replies' in post and 0 <= reply_index < len(post['replies']):
             current_author = request.cookies.get('author', '')
             reply_author = post['replies'][reply_index].get('author', '')
+            is_logan = current_author == 'Logan' and request.cookies.get('logan_key') == 'supersecretvalue'
 
             # Only deletes reply if author matches
-            if current_author == reply_author or current_author == 'Logan':
+            if current_author == reply_author or current_author == is_logan:
                 post['replies'].pop(reply_index)
                 save_posts(posts)
 
     return redirect(url_for('home'))
+
+# Special route
+@app.route('/iamlogan')
+def iamlogan():
+    resp = make_response(redirect(url_for('home')))
+    resp.set_cookie('logan_key', 'supersecretvalue', max_age=60 * 60 * 24 * 365)
+    resp.set_cookie('author', 'Logan', max_age=60 * 60 * 24 * 365)
+    return resp
 
 
 if __name__ == '__main__':
